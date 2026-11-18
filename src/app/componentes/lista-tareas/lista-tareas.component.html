@@ -1,0 +1,116 @@
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Navegación de la aplicación">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">✓</span>
+      <span class="brand-copy"><strong>Task<span>Flow</span></strong><small>Angular · TypeScript</small></span>
+    </div>
+
+    <div class="side-divider"></div>
+    <div class="nav-label">ESPACIO DE TRABAJO</div>
+    <nav class="side-nav">
+      <a href="#resumen" class="selected"><span class="nav-ico">▦</span> Panel principal</a>
+      <a href="#nueva-tarea"><span class="nav-ico">⊞</span> Crear tarea</a>
+      <a href="#tareas"><span class="nav-ico">☷</span> Mis tareas <span class="nav-count">{{ total() }}</span></a>
+      <a href="#eventos"><span class="nav-ico">⚡</span> Eventos globales</a>
+    </nav>
+
+    <div class="side-divider lower"></div>
+    <div class="nav-label">TÉCNICAS IMPLEMENTADAS</div>
+    <div class="tech-list">
+      <span><b>01</b> Event Binding</span>
+      <span><b>02</b> &#64;Output / EventEmitter</span>
+      <span><b>03</b> Keyboard Filtering</span>
+      <span><b>04</b> &#64;HostListener</span>
+      <span><b>05</b> Angular Signals</span>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="user-avatar">LP</div>
+      <div><strong>Lenguaje de Programación 3</strong><small>Práctica · Clase 4</small></div>
+      <span class="user-more">···</span>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="breadcrumbs">Asignaturas <span>/</span> Lenguaje de Programación 3 <span>/</span> <b>Clase 4</b></div>
+      <div class="topbar-right"><span class="live-dot"></span> Aplicación activa <span class="app-label">ANGULAR 20</span></div>
+    </header>
+
+    <div class="container">
+      <section class="hero" id="resumen">
+        <div class="hero-left">
+          <span class="hero-kicker"><span></span> PRÁCTICA DE DESARROLLO WEB</span>
+          <h1>Organiza tus tareas.<br><span>Domina los eventos.</span></h1>
+          <p>Un gestor de actividades interactivo para trabajar con Event Binding, comunicación entre componentes y Angular Signals.</p>
+          <div class="hero-pills"><span>Event Binding</span><span>EventEmitter</span><span>Signals</span><span>HostListener</span></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-1"></div><div class="orbit orbit-2"></div>
+          <div class="art-center"><span>✓</span></div>
+          <div class="art-card art-card-1">(click) <span>✓</span></div>
+          <div class="art-card art-card-2">Signals <span>↗</span></div>
+          <div class="art-card art-card-3">$event <span>⚡</span></div>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Resumen de tareas">
+        <div class="metric-card"><span class="metric-icon m-purple">☷</span><div><strong>{{ total() }}</strong><small>Tareas totales</small></div><span class="metric-corner">TODAS</span></div>
+        <div class="metric-card"><span class="metric-icon m-orange">◷</span><div><strong>{{ pendientes() }}</strong><small>Pendientes</small></div><span class="metric-corner">POR HACER</span></div>
+        <div class="metric-card"><span class="metric-icon m-green">✓</span><div><strong>{{ completadas() }}</strong><small>Completadas</small></div><span class="metric-corner">LISTAS</span></div>
+        <div class="metric-card"><span class="metric-icon m-red">!</span><div><strong>{{ tareasAlta() }}</strong><small>Prioridad alta</small></div><span class="metric-corner">URGENTES</span></div>
+      </section>
+
+      <div class="progress-panel" aria-label="Progreso general">
+        <div><span class="progress-caption">PROGRESO DE ACTIVIDADES</span><strong>{{ porcentajeAvance() }}% <small>completado</small></strong></div>
+        <div class="progress-track"><div class="progress-fill" [style.width.%]="porcentajeAvance()"></div></div>
+        <span class="progress-detail">{{ completadas() }} de {{ total() }} tareas completadas</span>
+      </div>
+
+      <div id="nueva-tarea" class="section-heading"><div><span class="section-eyebrow">GESTIÓN DE ACTIVIDADES</span><h2>Panel de tareas</h2></div><p>Agrega, busca y administra tareas en tiempo real.</p></div>
+
+      <app-buscador-tarea
+        [filtroActual]="filtroTexto()"
+        (nuevaTareaEvent)="onAgregarTarea($event)"
+        (filtrarEvent)="onFiltrar($event)">
+      </app-buscador-tarea>
+
+      <section id="tareas" class="list-panel">
+        <div class="list-top">
+          <div><span class="section-eyebrow">LISTADO INTERACTIVO</span><h2>Mis actividades <span class="task-total">{{ tareasFiltradas().length }}</span></h2><p>Haz clic en cualquier actividad para cambiar su estado.</p></div>
+          <button type="button" class="restore-button" (click)="restaurarTareas()" title="Restablecer las tareas iniciales">↺ <span>Restaurar lista</span></button>
+        </div>
+        <div class="filters-row">
+          <div class="state-tabs" role="group" aria-label="Filtrar tareas por estado">
+            <button type="button" [class.active]="filtroEstado() === 'Todas'" (click)="seleccionarEstado('Todas')">Todas</button>
+            <button type="button" [class.active]="filtroEstado() === 'Pendientes'" (click)="seleccionarEstado('Pendientes')">Pendientes</button>
+            <button type="button" [class.active]="filtroEstado() === 'Completadas'" (click)="seleccionarEstado('Completadas')">Completadas</button>
+          </div>
+          <div class="right-filters"><label for="filtro-prioridad">Prioridad:</label><select id="filtro-prioridad" [value]="filtroPrioridad()" (change)="seleccionarPrioridad($event)"><option value="Todas">Todas</option><option value="Alta">Alta</option><option value="Media">Media</option><option value="Baja">Baja</option></select></div>
+        </div>
+
+        <ul class="task-list" aria-label="Tareas disponibles">
+          @for (t of tareasFiltradas(); track t.id) {
+            <li class="task-item" [class.completed]="t.completada" (click)="toggleCompletada(t.id)" (keydown.enter)="onTeclaTarea($event, t.id)" (keydown.space)="onTeclaTarea($event, t.id)" tabindex="0" role="button" [attr.aria-pressed]="t.completada" [attr.aria-label]="'Cambiar estado de ' + t.titulo">
+              <span class="task-check" [class.checked]="t.completada"><span>@if (t.completada) { ✓ }</span></span>
+              <span class="task-content"><strong>{{ t.titulo }}</strong><small>{{ t.completada ? 'Tarea completada' : 'Pendiente de realizar' }} · ID {{ t.id }}</small></span>
+              <span class="priority-badge" [class.high]="t.prioridad === 'Alta'" [class.medium]="t.prioridad === 'Media'" [class.low]="t.prioridad === 'Baja'">{{ t.prioridad }}</span>
+              <span class="task-status" [class.ready]="t.completada">{{ t.completada ? 'Finalizada' : 'En curso' }}</span>
+              <button type="button" class="delete-btn" (click)="eliminarTarea(t.id, $event)" [attr.aria-label]="'Eliminar la tarea ' + t.titulo" title="Eliminar tarea"><span aria-hidden="true">✕</span> Eliminar</button>
+            </li>
+          } @empty {
+            <li class="empty-state"><div class="empty-icon">☷</div><strong>No hay tareas que coincidan</strong><span>Prueba otra palabra o cambia los filtros seleccionados.</span><button type="button" (click)="seleccionarEstado('Todas'); filtroPrioridad.set('Todas'); filtroTexto.set('')">Limpiar filtros</button></li>
+          }
+        </ul>
+        <div class="list-bottom"><span><span class="dot purple"></span> {{ tareasFiltradas().length }} resultados visibles</span><span>Haz clic para completar · <strong>Eliminar</strong> no modifica el estado</span></div>
+      </section>
+
+      <section class="events-section" id="eventos">
+        <div class="events-panel"><div class="events-icon">⚡</div><div class="events-text"><span>EVENTOS GLOBALES · &#64;HOSTLISTENER</span><h3>{{ ultimoMensajeGlobal() }}</h3><p>Pulsa <kbd>ESC</kbd> para borrar la búsqueda o desplázate por la página para detectar el evento scroll.</p></div><span class="events-live"><span></span> Escuchando</span></div>
+        <div class="event-log"><div><span class="log-kicker">ÚLTIMA ACCIÓN EN LA LISTA</span><p>{{ ultimoMovimiento() }}</p></div><span>Signals .update() / .set()</span></div>
+      </section>
+
+      <footer class="page-footer"><span>TaskFlow · Gestor de tareas en Angular</span><span>Lenguaje de Programación 3 · Clase 4</span></footer>
+    </div>
+  </main>
+</div>

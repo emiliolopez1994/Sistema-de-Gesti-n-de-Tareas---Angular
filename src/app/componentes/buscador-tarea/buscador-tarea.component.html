@@ -1,0 +1,64 @@
+<section class="create-card" aria-labelledby="crear-tarea-heading">
+  <div class="card-heading">
+    <span class="heading-icon"><span aria-hidden="true">＋</span></span>
+    <div>
+      <div class="overline">FORMULARIO INTERACTIVO</div>
+      <h2 id="crear-tarea-heading">Crear nueva tarea</h2>
+      <p>Agrega una actividad con el botón o presionando Enter.</p>
+    </div>
+    <span class="code-tag">(keyup.enter)</span>
+  </div>
+
+  <div class="form-fields">
+    <div class="field-grow">
+      <label for="titulo-tarea">Nombre de la tarea</label>
+      <input
+        #inputTitulo
+        id="titulo-tarea"
+        type="text"
+        maxlength="120"
+        autocomplete="off"
+        placeholder="Ej. Preparar entrega de Angular..."
+        (keyup.enter)="emitirNuevaTarea(inputTitulo)"
+        (input)="mensajeValidacion = ''"
+        [attr.aria-invalid]="mensajeValidacion ? 'true' : null"
+      />
+    </div>
+    <div class="field-priority">
+      <label for="seleccion-prioridad">Prioridad</label>
+      <select id="seleccion-prioridad" (change)="onSeleccionarPrioridad($event)">
+        <option value="Media">Media</option>
+        <option value="Alta">Alta</option>
+        <option value="Baja">Baja</option>
+      </select>
+    </div>
+    <button type="button" class="add-button" (click)="emitirNuevaTarea(inputTitulo)">
+      <span aria-hidden="true">＋</span> Agregar tarea
+    </button>
+  </div>
+
+  @if (mensajeValidacion) {
+    <p class="validation" role="alert">{{ mensajeValidacion }}</p>
+  }
+
+  <div class="form-footer">
+    <span><span class="tiny-dot"></span> Comunicación hijo → padre mediante <strong>&#64;Output()</strong></span>
+    <span>EventEmitter · $event · #inputTitulo</span>
+  </div>
+</section>
+
+<div class="search-input-wrap">
+  <div class="search-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+  </div>
+  <input
+    #inputBuscar
+    type="search"
+    aria-label="Buscar tareas en tiempo real"
+    placeholder="Buscar tarea por nombre..."
+    [value]="filtroActual"
+    (input)="onInputFiltrar($event)"
+  />
+  <button type="button" class="clear-search" (click)="limpiarBusqueda(inputBuscar)" aria-label="Limpiar búsqueda" title="Limpiar búsqueda">✕</button>
+  <span class="shortcut">ESC</span>
+</div>
